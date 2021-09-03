@@ -1,0 +1,53 @@
+using System.IO;
+using System.Net;
+using System.Text.Json;
+using System.Net.NetworkInformation;
+
+namespace Utils
+{
+    public struct KeySet
+    {
+        public byte[] Key;
+        public byte[] IV;
+    }
+
+    public static class ArrayAppender
+    {
+        public static void Append<T>(ref T[] a, T[] b)
+        {
+            T[] result = new T[a.Length + b.Length];
+
+            for(int i = 0; i < a.Length; i++)
+            {
+                result[i] = a[i];
+            }
+            for(int i = a.Length; i < a.Length + b.Length; i++)
+            {
+                result[i] = b[i - a.Length];
+            }
+
+            a = result;
+        }
+
+        public static void Append<T>(ref T[] a, T b)
+        {
+            T[] result = new T[a.Length + 1];
+
+            for(int i = 0; i < a.Length; i++)
+            {
+                result[i] = a[i];
+            }
+
+            result[a.Length] = b;
+            a = result;
+        }
+    }
+
+    public static class CONSTANTS
+    {
+        public static int FAIL = 0x00;
+        public static int SUCCESS = 0x01;
+        public static int SEND_KEY = 0x02;
+        public static int DECRYPT_REQ = 0x03;
+    }
+}
